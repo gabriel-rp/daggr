@@ -1,0 +1,21 @@
+name: include('simple_name')
+steps: list(include('step'), min=1)
+
+---
+
+simple_name: str(matches='[a-z0-9_]*')
+
+---
+
+step_reference_name: str(matches='[a-z0-9_]*\.[a-z0-9_]*')
+
+---
+
+step:
+  name: include('simple_name')
+  type: enum('python', required=False)
+  script: str(required=False)
+  depends_on: list(include('step_reference_name'), required=False)
+  parameters: map(required=False)
+  inputs: map(required=False)
+  requirements: str(required=False)
