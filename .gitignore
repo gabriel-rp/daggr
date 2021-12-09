@@ -2,8 +2,14 @@
 
 ## venv
 venv/
+## pyenv
+.python-version
+## pytest-cov
+.coverage
 
 ## Cache
 __pycache__/
 ### pytest
 .pytest_cache
+### mypy
+.mypy_cache
