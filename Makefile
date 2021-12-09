@@ -31,34 +31,41 @@ test_requirements:
 
 test:
 	source ${PYTHON_VENV_DIR}/bin/activate && \
-		pytest -v
+		python3 -m pytest -v --cov=daggr tests/
+
+tdd:
+	ptw --runner "python -m pytest --cov=daggr tests/"
+
+mypy:
+	python3 -m mypy . \
+		--disable-error-code import
 
 lint_dryrun: 
 	@echo "> LINTING..."
 
 	@echo ""
 	@echo ">> Step: isort"
-	isort --skip venv --check ./ 
+	python3 -m isort --skip venv --check ./ 
 
 	@echo ""
 	@echo ">> Step: autoflake"
-	autoflake -r --exclude venv --remove-all-unused-imports --check ./
+	python3 -m autoflake -r --exclude venv --remove-all-unused-imports --check ./
 
 	@echo ""
 	@echo ">> Step: black"
-	black --exclude venv --check ./ 
+	python3 -m black --exclude venv --check ./ 
 
 lint: 
 	@echo "> LINTING..."
 
 	@echo ""
 	@echo ">> Step: isort"
-	isort --skip venv ./ 
+	python3 -m isort --skip venv ./ 
 
 	@echo ""
 	@echo ">> Step: autoflake"
-	autoflake -r --exclude venv --remove-all-unused-imports ./
+	python3 -m autoflake -r --in-place --exclude venv --remove-all-unused-imports ./
 	
 	@echo ""
 	@echo ">> Step: black"
-	black --exclude venv ./
+	python3 -m black --exclude venv ./
