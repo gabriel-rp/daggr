@@ -1,7 +1,4 @@
 steps:
-  - name: add_grade_letter
+  add_grade_letter:
     inputs:
       scores: csv:data/scores_sample.csv
-    
-  - inputs:
-      grades: output:add_passed_flag

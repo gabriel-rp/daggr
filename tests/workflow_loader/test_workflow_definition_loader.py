@@ -1,6 +1,6 @@
 import pytest
 
-from daggr.core.workflow import Workflow
+from daggr.core.dag import WorkflowDefinition
 from daggr.workflow_loader.workflow_definition_loader import (
     WorkflowDefinitionLoader,
     WorkflowDefinitionValidator,
@@ -19,7 +19,7 @@ def test_abstract_workflow_loader(valid_workflow_yaml_definition_path):
 
 def test_incomplete_validator_implementation(valid_workflow_yaml_definition_path):
     class IncompleteValidator(WorkflowDefinitionValidator):
-        def validate_schema(self) -> Workflow:
+        def validate_schema(self) -> WorkflowDefinition:
             return super().validate_schema()
 
     with pytest.raises(NotImplementedError):
@@ -28,7 +28,7 @@ def test_incomplete_validator_implementation(valid_workflow_yaml_definition_path
 
 def test_incomplete_loader_implementation(valid_workflow_yaml_definition_path):
     class IncompleteLoader(WorkflowDefinitionLoader):
-        def load(self) -> Workflow:
+        def load(self) -> WorkflowDefinition:
             return super().load()
 
     with pytest.raises(NotImplementedError):

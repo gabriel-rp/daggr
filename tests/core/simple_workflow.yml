@@ -1,0 +1,6 @@
+dag: test
+steps:
+  step1:
+    script: scripts/step1.py
+  step2: 
+    script: scripts/step2.py

@@ -1,6 +1,6 @@
 import pytest
 
-from daggr.core.workflow import Workflow
+from daggr.core.dag import WorkflowDefinition
 from daggr.workflow_loader.workflow_definition_loader import (
     InvalidWorkflow,
     InvalidWorkflowSchema,
@@ -75,7 +75,7 @@ def test_yaml_validator_with_invalid_workflow_definition(
         YamlWorkflowValidator(filepath).validate_schema()
 
 
-def test_yaml_validator_with_valid_workflow_definition(tmp_path, valid_yaml):
+def test_yaml_validator_with_valid_yaml(tmp_path, valid_yaml):
     filepath = write_str_to_temp_yaml(valid_yaml, tmp_path, "valid_workflow.yml")
     with pytest.raises(InvalidWorkflowSchema):
         YamlWorkflowValidator(filepath).validate_schema()
@@ -84,4 +84,4 @@ def test_yaml_validator_with_valid_workflow_definition(tmp_path, valid_yaml):
 def test_loader_with_valid_yaml_definition(valid_workflow_yaml_definition_path):
     loader = YamlDefinitionLoader(valid_workflow_yaml_definition_path)
     workflow = WorkflowLoader(loader).load()
-    assert isinstance(workflow, Workflow)
+    assert isinstance(workflow, WorkflowDefinition)

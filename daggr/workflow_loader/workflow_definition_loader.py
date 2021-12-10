@@ -3,7 +3,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import Any, Dict
 
-from daggr.core.workflow import Workflow
+from daggr.core.dag import WorkflowDefinition
 
 
 class InvalidWorkflow(Exception):
@@ -51,5 +51,5 @@ class WorkflowDefinitionLoader(ABC):
         self.filepath = filepath
 
     @abstractmethod
-    def load(self) -> Workflow:
+    def load(self) -> WorkflowDefinition:
         raise NotImplementedError()

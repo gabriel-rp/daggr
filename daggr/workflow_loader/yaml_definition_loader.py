@@ -3,7 +3,7 @@ from pathlib import Path
 import yamale
 import yaml
 
-from daggr.core.workflow import Workflow
+from daggr.core.dag import WorkflowDefinition
 from daggr.workflow_loader.workflow_definition_loader import (
     InvalidWorkflow,
     InvalidWorkflowSchema,
@@ -56,9 +56,11 @@ class YamlDefinitionLoader(WorkflowDefinitionLoader):
         super().__init__(filepath)
         self.validator = YamlWorkflowValidator(self.filepath)
 
-    def load(self) -> Workflow:
+    def load(self) -> WorkflowDefinition:
         self.validator.validate_schema()
-        return Workflow(**_YamlFileLoader.load(self.filepath))
+        return WorkflowDefinition(
+            **_YamlFileLoader.load(self.filepath), path=str(Path(self.filepath).parent)
+        )
 
 
 class YamlWorkflowValidator(WorkflowDefinitionValidator):
