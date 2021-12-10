@@ -27,11 +27,14 @@ An explicit dependency can be configured in the workflow definition by specifyin
  
 
 ## Dependencies
-
+```
 pyyaml==6.0
 yamale==4.0.2
+```
 
 ## Development Dependencies
+```
 pytest
 black
 autoflake
+```

@@ -1,13 +1,11 @@
-name: simple_workflow
+dag: simple_workflow
 steps:
-  - name: add_grade_letter
+  generate_scores: {}
+
+  filter_passing_scores:
     inputs:
-      scores: csv:data/scores_sample.csv
-    
-  - name: add_passed_flag
-    inputs:
-      grades: output:add_grade_letter
-    
-  - name: filter_passing_scores
-    inputs:
-      grades: output:add_passed_flag
+      grades: output:generate_scores
+    parameters:
+      passing_score: 7
+    depends_on: 
+      - generate_scores
