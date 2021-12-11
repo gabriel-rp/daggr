@@ -7,5 +7,5 @@ python:
   - 3.10
 before_install:
   - python --version
-  - pip install -U pip
+  - python -m pip install -U pip
 script: make all
