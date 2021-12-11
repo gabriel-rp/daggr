@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable, List, Optional, Tuple
 
+
 class output:
     def __init__(self, name: str, type: str, output_path: Optional[str] = None):
         self.name = name
