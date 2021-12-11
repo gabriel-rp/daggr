@@ -19,7 +19,7 @@ with open(setup_path / "requirements.txt") as f:
 setup(
     author=__author__,
     author_email=__email__,
-    python_requires=">=3.6,<3.10",
+    python_requires=">=3.7,<=3.9",
     description="DAGGR CLI",
     entry_points={
         "console_scripts": [
