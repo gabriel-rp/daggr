@@ -26,10 +26,12 @@ test:
 		python -m pytest -v --cov=daggr tests/
 
 tdd:
-	ptw --runner "python -m pytest --cov=daggr tests/"
+	source ${PYTHON_VENV_DIR}/bin/activate && \
+		ptw --runner "python -m pytest --cov=daggr tests/"
 
 mypy:
-	python -m mypy . \
+	source ${PYTHON_VENV_DIR}/bin/activate && \
+		python -m mypy . \
 		--disable-error-code import
 
 lint_dryrun: 
@@ -37,27 +39,33 @@ lint_dryrun:
 
 	@echo ""
 	@echo ">> Step: isort"
-	python -m isort --skip venv --check ./ 
+	source ${PYTHON_VENV_DIR}/bin/activate && \
+		python -m isort --skip venv --check ./ 
 
 	@echo ""
 	@echo ">> Step: autoflake"
-	python -m autoflake -r --exclude venv --remove-all-unused-imports --check ./
+	source ${PYTHON_VENV_DIR}/bin/activate && \
+		python -m autoflake -r --exclude venv --remove-all-unused-imports --check ./
 
 	@echo ""
 	@echo ">> Step: black"
-	python -m black --exclude venv --check ./ 
+	source ${PYTHON_VENV_DIR}/bin/activate && \
+		python -m black --exclude venv --check ./ 
 
 lint: 
 	@echo "> LINTING..."
 
 	@echo ""
 	@echo ">> Step: isort"
-	python -m isort --skip venv ./ 
+	source ${PYTHON_VENV_DIR}/bin/activate && \
+		python -m isort --skip venv ./ 
 
 	@echo ""
 	@echo ">> Step: autoflake"
-	python -m autoflake -r --in-place --exclude venv --remove-all-unused-imports ./
+	source ${PYTHON_VENV_DIR}/bin/activate && \
+		python -m autoflake -r --in-place --exclude venv --remove-all-unused-imports ./
 	
 	@echo ""
 	@echo ">> Step: black"
-	python -m black --exclude venv ./
+	source ${PYTHON_VENV_DIR}/bin/activate && \
+		python -m black --exclude venv ./
