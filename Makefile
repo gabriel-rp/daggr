@@ -4,7 +4,7 @@ PYTHON_VENV_DIR := venv/dev
 
 all: setup validate test
 setup: create_env requirements test_requirements
-validate: validate_schema lint_dryrun
+validate: lint_dryrun
 
 
 ## Common targets
@@ -15,14 +15,6 @@ create_env:
 requirements:
 	source ${PYTHON_VENV_DIR}/bin/activate && \
 		python3 -m pip install -r requirements.txt
-
-
-## Engine Usage
-validate_schema: 
-	@echo "Validating workflow schemas in ${WORKFLOW_FOLDER}"
-	source ${PYTHON_VENV_DIR}/bin/activate && \
-		python3 validation/validate_schema.py ${WORKFLOW_FOLDER}
-
 
 ## Engine Development
 test_requirements:
