@@ -88,7 +88,9 @@ isort==5.10.1
 pytest-cov==3.0.0
 pytest-watch
 ```
-`black`, `autoflake`, and `isort` set the code style and linting rules
-`pytest`, `pytest-cov`, `pytest-watch` are used for testing, coverage and TDD, respectively
+`black`, `autoflake`, and `isort` set the code style and linting rules.
+
+
+`pytest`, `pytest-cov`, `pytest-watch` are used for testing, coverage and TDD, respectively.
 
 
