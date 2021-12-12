@@ -1,6 +1,7 @@
 # DAGGR - Directed Acyclic Graph Generator & Runtime
 
 ![](https://app.travis-ci.com/gabriel-rp/daggr.svg?branch=main)
+[![codecov](https://codecov.io/gh/gabriel-rp/daggr/branch/main/graph/badge.svg?token=GOQ0JSTDIQ)](https://codecov.io/gh/gabriel-rp/daggr)
 ![](https://img.shields.io/badge/code%20style-black-000000.svg)
 
 ![DAGGR logo --- a dagger over the letters DAGGR](docs/daggr_logo.png)
