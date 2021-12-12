@@ -8,7 +8,9 @@ from daggr.core.dag import (
     Dag,
     DagRun,
     DagRuntime,
+    DagRuntimeFactory,
     DependenciesNotDefinedYet,
+    DependencyOnSelfNotAllowed,
     LocalRuntime,
     Step,
     StepState,
@@ -43,6 +45,7 @@ def test_dag(workflow_definition):
 
 def test_exceptions_repr():
     str(DependenciesNotDefinedYet(""))
+    str(DependencyOnSelfNotAllowed(""))
 
 
 def test_step_name_is_used_when_no_script_name():
@@ -249,13 +252,21 @@ def test_step_runs_after_dependency():
     assert dagrun.step_runs["step1"].end_time < dagrun.step_runs["step2"].start_time
 
 
-def test_multiple_steps_run_in_correct_order():
-    class MockedSuccessfulRun:
-        stdout = ""
-        stderr = ""
-        returncode = 0
-        state = StepState.SUCCESSFUL
+class MockedSuccessfulRun:
+    stdout = ""
+    stderr = ""
+    returncode = 0
+    state = StepState.SUCCESSFUL
 
+
+class MockedFailedRun:
+    stdout = ""
+    stderr = "error"
+    returncode = 1
+    state = StepState.FAILED
+
+
+def test_multiple_steps_run_in_correct_order():
     dag_subprocess.run = mock.MagicMock(return_value=MockedSuccessfulRun())
 
     wd = WorkflowDefinition(
@@ -283,3 +294,91 @@ def test_multiple_steps_run_in_correct_order():
     assert dagrun.step_runs["step1"].end_time < dagrun.step_runs["step3"].start_time
     assert dagrun.step_runs["step2"].end_time < dagrun.step_runs["step4"].start_time
     assert dagrun.step_runs["step4"].end_time < dagrun.step_runs["step5"].start_time
+
+
+def test_redundant_dependencies():
+    dag_subprocess.run = mock.MagicMock(return_value=MockedSuccessfulRun())
+
+    wd = WorkflowDefinition(
+        dag="test_dag",
+        steps={
+            "root": {},
+            "step1": {"depends_on": ["root"]},
+            "step2": {"depends_on": ["root", "step1"]},
+            "step3": {"depends_on": ["root", "step1", "step2"]},
+        },
+        path=str(Path(__file__).parent / "scripts"),
+    )
+    dag = Dag(wd)
+    dagrun = DagRun(dag)
+    runtime = LocalRuntime(dagrun)
+    runtime.execute()
+
+    runtime.run_step = mock.MagicMock(return_value=MockedSuccessfulRun())
+
+    assert dagrun.step_runs["root"].state == StepState.SUCCESSFUL
+    assert dagrun.step_runs["step1"].state == StepState.SUCCESSFUL
+    assert dagrun.step_runs["step2"].state == StepState.SUCCESSFUL
+    assert dagrun.step_runs["step3"].state == StepState.SUCCESSFUL
+
+    assert dagrun.step_runs["root"].end_time < dagrun.step_runs["step1"].start_time
+    assert dagrun.step_runs["step1"].end_time < dagrun.step_runs["step2"].start_time
+    assert dagrun.step_runs["step2"].end_time < dagrun.step_runs["step3"].start_time
+
+
+def test_failed_dependency_cancels_downstream():
+
+    dag_subprocess.run = mock.MagicMock(return_value=MockedFailedRun())
+
+    wd = WorkflowDefinition(
+        dag="test_dag",
+        steps={
+            "root": {},
+            "step1": {"depends_on": ["root"]},
+            "step2": {"depends_on": ["step1"]},
+            "step3": {"depends_on": ["step2"]},
+        },
+        path=str(Path(__file__).parent / "scripts"),
+    )
+    dag = Dag(wd)
+    dagrun = DagRun(dag)
+    runtime = LocalRuntime(dagrun)
+    runtime.execute()
+
+    assert dagrun.step_runs["root"].state == StepState.FAILED
+    assert dagrun.step_runs["step1"].state == StepState.CANCELLED
+    assert dagrun.step_runs["step2"].state == StepState.CANCELLED
+    assert dagrun.step_runs["step3"].state == StepState.CANCELLED
+
+
+def test_dependency_on_itself():
+    dag_subprocess.run = mock.MagicMock(return_value=MockedSuccessfulRun())
+
+    wd = WorkflowDefinition(
+        dag="test_dag",
+        steps={
+            "root": {"depends_on": ["root"]},
+        },
+        path=str(Path(__file__).parent / "scripts"),
+    )
+    with pytest.raises(DependencyOnSelfNotAllowed):
+        dag = Dag(wd)
+
+
+def test_runtime_factory():
+    dag_subprocess.run = mock.MagicMock(return_value=MockedSuccessfulRun())
+
+    wd = WorkflowDefinition(
+        dag="test_dag",
+        steps={
+            "root": {},
+        },
+        path="",
+    )
+    dag = Dag(wd)
+    dag_run = DagRun(dag)
+
+    impl = "local"
+    runtime = DagRuntimeFactory.create(impl, dag_run)
+    assert runtime.dag_run == dag_run
+    assert isinstance(runtime, DagRuntimeFactory.IMPLEMENTATIONS[impl])

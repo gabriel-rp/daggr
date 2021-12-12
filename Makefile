@@ -37,6 +37,7 @@ tdd: ## Runs Test Driven Development (TDD) plugin for pytest
 
 mypy: ## Static type checking
 	source ${PYTHON_VENV_DIR}/bin/activate && \
+		python -m pip install mypy && \
 		python -m mypy . \
 		--disable-error-code import
 

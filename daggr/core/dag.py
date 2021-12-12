@@ -32,6 +32,14 @@ class DependenciesNotDefinedYet(Exception):
         )
 
 
+class DependencyOnSelfNotAllowed(Exception):
+    def __init__(self, dependency_name: str):
+        self.dependency_name = dependency_name
+
+    def __str__(self) -> str:
+        return f'Step "{self.dependency_name}"  cannot have dependency on itself'
+
+
 class Dag:
     name: str
     root_steps: List[str]
@@ -52,6 +60,8 @@ class Dag:
                 self.root_steps.append(name)
             else:
                 for dependency_name in step.depends_on:
+                    if dependency_name == step.name:
+                        raise DependencyOnSelfNotAllowed(dependency_name)
                     if dependency_name not in self.steps.keys():
                         raise DependenciesNotDefinedYet(dependency_name)
                     self.steps[dependency_name].dependency_of.append(name)
@@ -152,6 +162,7 @@ class LocalRuntime(DagRuntime):
             / self.dag_run.dag.steps[step_name].script
         )
 
+        # TODO: encapsulate execution implementation in class or function
         result = subprocess.run(
             f"{sys.executable} {script_path}",
             text=True,
