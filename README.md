@@ -114,3 +114,5 @@ The `Makefile` in the repo contains recipes that aid development.
 
 Run `make help` for a list of available targets.
 
+Run `make all` to setup your environment and run all tests
+
