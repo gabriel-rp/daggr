@@ -22,7 +22,6 @@ class output:
             if not path:
                 raise Exception("Environment variable DAGGR_OUTPUTS_PATH not set.")
             self.output_path = path
-                
 
     def _get_step_output_path(self, step_name: str) -> Path:
         return Path(self.output_path) / step_name
