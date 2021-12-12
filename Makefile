@@ -25,6 +25,10 @@ test:
 	source ${PYTHON_VENV_DIR}/bin/activate && \
 		python -m pytest -v --cov=daggr tests/
 
+cov_report:
+	source ${PYTHON_VENV_DIR}/bin/activate && \
+		python -m pytest --cov-report html --cov-report xml:coverage.xml --cov=daggr tests/
+
 tdd:
 	source ${PYTHON_VENV_DIR}/bin/activate && \
 		ptw --runner "python -m pytest --cov=daggr tests/"

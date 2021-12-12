@@ -6,6 +6,8 @@ venv/
 .python-version
 ## pytest-cov
 .coverage
+coverage.xml
+htmlcov
 
 ## Cache
 __pycache__/
