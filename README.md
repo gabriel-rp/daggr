@@ -18,7 +18,7 @@ Each DAG is composed of series of steps. These steps can have inputs, outputs, p
 ### Step Input
 There is currently one kind input sources: `step`. These are inputs loaded from a previous step's output. 
 
-**TODO**: create an input source `static`, loaded from files stored in the file system.
+* **TODO**: create an input source `static`, loaded from files stored in the file system.
 
 ### Step Output
 A step output is always the returned value from a step function's with the `@output` decorator, provided by the DAGGR library.
