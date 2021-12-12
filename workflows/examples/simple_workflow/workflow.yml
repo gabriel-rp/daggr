@@ -9,3 +9,9 @@ steps:
       passing_score: 7
     depends_on: 
       - generate_scores
+
+  display_scores:
+    inputs:
+      approved: output:filter_passing_scores
+    depends_on: 
+      - filter_passing_scores
