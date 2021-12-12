@@ -5,7 +5,7 @@ from daggr.core.decorators import inputs, output
 
 @inputs()
 @output("approved", type="pickle")
-def filter(inputs: Dict[str, Any] = None, parameters: Dict[str, Any] = None):
+def filter(inputs: Dict[str, Any], parameters: Dict[str, Any]):
     print("inputs", inputs)
     print("parameters", parameters)
     approved = {

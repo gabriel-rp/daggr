@@ -19,7 +19,7 @@ def test_abstract_workflow_loader(valid_workflow_yaml_definition_path):
 
 def test_incomplete_validator_implementation(valid_workflow_yaml_definition_path):
     class IncompleteValidator(WorkflowDefinitionValidator):
-        def validate_schema(self) -> WorkflowDefinition:
+        def validate_schema(self) -> None:
             return super().validate_schema()
 
     with pytest.raises(NotImplementedError):

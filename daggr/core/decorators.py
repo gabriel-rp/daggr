@@ -18,7 +18,11 @@ class output:
         if output_path:
             self.output_path = output_path
         else:
-            self.output_path = os.getenv("DAGGR_OUTPUTS_PATH")
+            path = os.getenv("DAGGR_OUTPUTS_PATH")
+            if not path:
+                raise Exception("Environment variable DAGGR_OUTPUTS_PATH not set.")
+            self.output_path = path
+                
 
     def _get_step_output_path(self, step_name: str) -> Path:
         return Path(self.output_path) / step_name
@@ -58,7 +62,7 @@ class inputs:
     def _get_step_name(self, input: str) -> str:
         return input.split(":")[1]
 
-    def _get_interface_and_filepath(self, input: str) -> Tuple[str]:
+    def _get_interface_and_filepath(self, input: str) -> Tuple[str, str]:
         return input.split(":")[0], input.split(":")[1]
 
     def _read_metadata_file(self, step_name: str) -> OutputMetadata:

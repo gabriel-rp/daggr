@@ -5,7 +5,7 @@ import os
 import subprocess
 import sys
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum, auto
 from pathlib import Path
@@ -216,16 +216,10 @@ class DagRuntimeFactory:
 @dataclass
 class Step:
     name: str
+    script: str
+    depends_on: List[str] = field(default_factory=lambda: [])
+    dependency_of: List[str] = field(default_factory=lambda: [])
+    parameters: Dict[str, Any] = field(default_factory=lambda: {})
+    inputs: Dict[str, Any] = field(default_factory=lambda: {})
     type: str = "python"
-    script: Optional[str] = None
-    depends_on: Optional[List[str]] = None
-    dependency_of: Optional[List[str]] = None
-    parameters: Optional[Dict[str, Any]] = None
-    inputs: Optional[Dict[str, Any]] = None
     requirements: Optional[str] = None
-
-    def __post_init__(self):
-        if not self.dependency_of:
-            self.dependency_of = []
-        if not self.depends_on:
-            self.depends_on = []

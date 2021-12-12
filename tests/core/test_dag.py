@@ -28,7 +28,7 @@ def test_empty_step():
 
 
 def test_valid_step():
-    Step({"inputs": {"l": []}})
+    Step(name="mystep", script="my/step.py", inputs={"l": []})
 
 
 def test_valid_workflow():
