@@ -109,4 +109,8 @@ pytest-watch
 
 `pytest`, `pytest-cov`, `pytest-watch` are used for testing, coverage and TDD, respectively.
 
+# Development Tools
+The `Makefile` in the repo contains recipes that aid development.
+
+Run `make help` for a list of available targets.
 
