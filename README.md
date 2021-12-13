@@ -8,7 +8,7 @@
 
 **This is a toy project.**
 
-DAGGR is designed to define and execute workflows that can be represented as Directed Acyclic Graphs (DAGs) using a declarative approach, using YAML files for example.
+DAGGR is designed to define and execute workflows that can be represented as Directed Acyclic Graphs (DAGs) in a declarative approach, using YAML files for example.
 
 <hr>
 
@@ -78,39 +78,63 @@ def filter(inputs: Dict[str, Any] = None, parameters: Dict[str, Any] = None):
 ```
 
 ## Workflow execution
-To execute a workflow, use the `run` command provided by the DAGGR CLI, passing the workflow definition file as an argument.
+To execute a workflow, use the `run` command provided by the DAGGR CLI, `daggr`, passing the workflow definition file as an argument.
 
-```sh
-daggr run -w workflows/examples/simple_workflow_example/workflow.yml
-```
+Example:
 
-This should output the following
+* Workflow definition (located in `workflows/examples/simple_workflow/workflow.yml`)
 
-```
-2021-12-13 20:28:32,908 Executing step "generate_scores".
-2021-12-13 20:28:32,985 Step "generate_scores" StepState.SUCCESSFUL
-2021-12-13 20:28:32,985 Executing step "filter_passing_scores".
-2021-12-13 20:28:33,061 Step "filter_passing_scores" StepState.SUCCESSFUL
-2021-12-13 20:28:33,061 Executing step "display_scores".
-2021-12-13 20:28:33,134 Step "display_scores" StepState.SUCCESSFUL
- ======== STDOUT Step "generate_scores" ======== 
-DAGGR_INPUTS={}
-DAGGR_DAG_NAME=simple_workflow
-DAGGR_OUTPUTS_PATH=/Users/gabriel.pereira/Documents/mle/repos/daggr/workflows/examples/simple_workflow/outputs
-DAGGR_STEP_NAME=generate_scores
-DAGGR_PARAMETERS={}
+  ```yaml
+  dag: simple_workflow
+  steps:
+    generate_scores: {}
 
- ======== 
- ======== STDOUT Step "filter_passing_scores" ======== 
-inputs {'grades': {'1': {'score': 5}, '2': {'score': 7}, '3': {'score': 8}, '4': {'score': 2}, '5': {'score': 1}, '6': {'score': 10}}}
-parameters {'passing_score': 7}
+    filter_passing_scores:
+      inputs:
+        grades: output:generate_scores
+      parameters:
+        passing_score: 7
+      depends_on: 
+        - generate_scores
 
- ======== 
- ======== STDOUT Step "display_scores" ======== 
-{'2': {'score': 7}, '3': {'score': 8}, '6': {'score': 10}}
+    display_scores:
+      inputs:
+        approved: output:filter_passing_scores
+      depends_on: 
+        - filter_passing_scores
+  ```
 
- ======== 
-```
+* Execution via CLI
+  ```sh
+  daggr run -w workflows/examples/simple_workflow/workflow.yml
+  ```
+
+* Expected output
+  ```
+  2021-12-13 20:28:32,908 Executing step "generate_scores".
+  2021-12-13 20:28:32,985 Step "generate_scores" StepState.SUCCESSFUL
+  2021-12-13 20:28:32,985 Executing step "filter_passing_scores".
+  2021-12-13 20:28:33,061 Step "filter_passing_scores" StepState.SUCCESSFUL
+  2021-12-13 20:28:33,061 Executing step "display_scores".
+  2021-12-13 20:28:33,134 Step "display_scores" StepState.SUCCESSFUL
+  ======== STDOUT Step "generate_scores" ======== 
+  DAGGR_INPUTS={}
+  DAGGR_DAG_NAME=simple_workflow
+  DAGGR_OUTPUTS_PATH=.../daggr/workflows/examples/simple_workflow/outputs
+  DAGGR_STEP_NAME=generate_scores
+  DAGGR_PARAMETERS={}
+
+  ======== 
+  ======== STDOUT Step "filter_passing_scores" ======== 
+  inputs {'grades': {'1': {'score': 5}, '2': {'score': 7}, '3': {'score': 8}, '4': {'score': 2}, '5': {'score': 1}, '6': {'score': 10}}}
+  parameters {'passing_score': 7}
+
+  ======== 
+  ======== STDOUT Step "display_scores" ======== 
+  {'2': {'score': 7}, '3': {'score': 8}, '6': {'score': 10}}
+
+  ======== 
+  ```
 
 
 # Development
