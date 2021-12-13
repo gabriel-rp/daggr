@@ -84,6 +84,43 @@ To execute a workflow, use the `run` command provided by the DAGGR CLI, passing 
 daggr run -w workflows/examples/simple_workflow_example/workflow.yml
 ```
 
+This should output the following
+
+```
+2021-12-13 20:28:32,908 Executing step "generate_scores".
+2021-12-13 20:28:32,985 Step "generate_scores" StepState.SUCCESSFUL
+2021-12-13 20:28:32,985 Executing step "filter_passing_scores".
+2021-12-13 20:28:33,061 Step "filter_passing_scores" StepState.SUCCESSFUL
+2021-12-13 20:28:33,061 Executing step "display_scores".
+2021-12-13 20:28:33,134 Step "display_scores" StepState.SUCCESSFUL
+ ======== STDOUT Step "generate_scores" ======== 
+DAGGR_INPUTS={}
+DAGGR_DAG_NAME=simple_workflow
+DAGGR_OUTPUTS_PATH=/Users/gabriel.pereira/Documents/mle/repos/daggr/workflows/examples/simple_workflow/outputs
+DAGGR_STEP_NAME=generate_scores
+DAGGR_PARAMETERS={}
+
+ ======== 
+ ======== STDOUT Step "filter_passing_scores" ======== 
+inputs {'grades': {'1': {'score': 5}, '2': {'score': 7}, '3': {'score': 8}, '4': {'score': 2}, '5': {'score': 1}, '6': {'score': 10}}}
+parameters {'passing_score': 7}
+
+ ======== 
+ ======== STDOUT Step "display_scores" ======== 
+{'2': {'score': 7}, '3': {'score': 8}, '6': {'score': 10}}
+
+ ======== 
+```
+
+
+# Development
+
+The `Makefile` in the repo contains recipes that aid development.
+
+Run `make help` for a list of available targets.
+
+Run `make all` to setup your environment and run all tests
+
 ## Dependencies
 ```
 yamale==4.0.2
@@ -108,11 +145,3 @@ pytest-watch
 
 
 `pytest`, `pytest-cov`, `pytest-watch` are used for testing, coverage and TDD, respectively.
-
-# Development Tools
-The `Makefile` in the repo contains recipes that aid development.
-
-Run `make help` for a list of available targets.
-
-Run `make all` to setup your environment and run all tests
-
