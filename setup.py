@@ -28,7 +28,7 @@ setup(
     },
     install_requires=requirements,
     include_package_data=True,
-    package_data={'': ['*.yml']},
+    package_data={"": ["*.yml"]},
     keywords="daggr",
     name="daggr",
     packages=find_packages(include=["daggr", "daggr.*"]),
