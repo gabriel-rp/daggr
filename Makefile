@@ -81,5 +81,5 @@ lint: ## Lint source code
 	source ${PYTHON_VENV_DIR}/bin/activate && \
 		python -m black --exclude venv ./
 
-precommit:
+precommit: ## Install pre-commit locally 
 	pre-commit install
