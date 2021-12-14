@@ -3,7 +3,7 @@ WORKFLOW_FOLDER := $(CURDIR)/workflows/
 PYTHON_VENV_DIR := venv/dev
 
 all: setup validate test
-setup: create_env requirements test_requirements
+setup: create_env requirements test_requirements dev_requirements
 validate: lint_dryrun
  
 help: ## Show this help
@@ -22,6 +22,10 @@ requirements: ## Install DAGGR requirements
 test_requirements: ## Installs test requirements
 	source ${PYTHON_VENV_DIR}/bin/activate && \
 		python -m pip install -r test_requirements.txt
+
+dev_requirements: ## Installs development requirements
+	source ${PYTHON_VENV_DIR}/bin/activate && \
+		python -m pip install -r dev_requirements.txt
 
 test: ## Runs tests
 	source ${PYTHON_VENV_DIR}/bin/activate && \
@@ -76,3 +80,6 @@ lint: ## Lint source code
 	@echo ">> Step: black"
 	source ${PYTHON_VENV_DIR}/bin/activate && \
 		python -m black --exclude venv ./
+
+precommit:
+	pre-commit install
