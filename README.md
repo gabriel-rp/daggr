@@ -8,10 +8,18 @@
 
 **This is a toy project.**
 
-DAGGR is designed to define and execute workflows that can be represented as Directed Acyclic Graphs (DAGs) in a declarative approach, using YAML files for example.
+DAGGR is designed to define and execute workflows that can be represented as Directed Acyclic Graphs (DAGs) using a declarative approach, using YAML files for example.
 
 <hr>
 
+## Installing
+Install the Python library and CLI with `pip` by cloning the repository.
+```sh 
+git clone https://github.com/gabriel-rp/daggr.git
+pip install daggr
+```
+
+# Concepts
 ## DAG Steps
 Each DAG is composed of series of steps. These steps can have inputs, outputs, parameters and dependencies.
 
